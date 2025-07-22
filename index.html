@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeHub - Real Estate Marketplace</title>
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #4fc3f7;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons button {
+            padding: 0.5rem 1rem;
+            margin-left: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-btn {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary) !important;
+        }
+        
+        .register-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .auth-buttons button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+        
+        .search-bar {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+        }
+        
+        .search-bar button {
+            padding: 0 1.5rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .search-bar button:hover {
+            background-color: var(--primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+        
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .property-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .property-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .property-info {
+            padding: 1.5rem;
+        }
+        
+        .property-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        .property-info .location {
+            color: #666;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-info .location i {
+            margin-right: 0.5rem;
+        }
+        
+        .property-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail {
+            text-align: center;
+        }
+        
+        .detail i {
+            display: block;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .property-modal {
+            max-width: 800px;
+        }
+        
+        .property-modal-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .property-modal-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .property-modal-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .property-modal-price {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .property-modal-description {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                margin-bottom: 1rem;
+            }
+            
+            .auth-buttons {
+                margin-top: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Home<span>Hub</span></div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#properties">Properties</a></li>
+                <li><a href="#">Agents</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <button class="login-btn" id="loginBtn">Login</button>
+            <button class="register-btn" id="registerBtn">Register</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Find Your Dream Home Today</h1>
+        <p>Browse thousands of properties for sale and rent from top agents and homeowners across the country</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Search by location, price, or property type...">
+            <button><i class="fas fa-search"></i> Search</button>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title" id="properties">Featured Properties</h2>
+        <div class="properties" id="propertiesContainer">
+            <!-- Properties will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login</h2>
+                <span class="close-btn" id="closeLogin">&times;</span>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Register</h2>
+                <span class="close-btn" id="closeRegister">&times;</span>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerType">I want to:</label>
+                    <select id="registerType" required>
+                        <option value="">Select option</option>
+                        <option value="buy">Buy properties</option>
+                        <option value="sell">Sell properties</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Property Modal -->
+    <div class="modal" id="addPropertyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>List Your Property</h2>
+                <span class="close-btn" id="closeAddProperty">&times;</span>
+            </div>
+            <form id="addPropertyForm">
+                <div class="form-group">
+                    <label for="propertyTitle">Property Title</label>
+                    <input type="text" id="propertyTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyAddress">Address</label>
+                    <input type="text" id="propertyAddress" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyPrice">Price ($)</label>
+                    <input type="number" id="propertyPrice" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyBedrooms">Bedrooms</label>
+                    <input type="number" id="propertyBedrooms" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyBathrooms">Bathrooms</label>
+                    <input type="number" id="propertyBathrooms" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertySqft">Square Feet</label>
+                    <input type="number" id="propertySqft" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyType">Property Type</label>
+                    <select id="propertyType" required>
+                        <option value="">Select type</option>
+                        <option value="house">House</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="condo">Condo</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="land">Land</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="propertyImage">Image URL</label>
+                    <input type="text" id="propertyImage" required>
+                </div>
+                <div class="form-group">
+                    <label for="propertyDescription">Description</label>
+                    <textarea id="propertyDescription" required></textarea>
+                </div>
+                <button type="submit" class="btn">List Property</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Property Details Modal -->
+    <div class="modal" id="propertyModal">
+        <div class="modal-content property-modal">
+            <div class="modal-header">
+                <h2 id="modalPropertyTitle">Modern Family Home</h2>
+                <span class="close-btn" id="closePropertyModal">&times;</span>
+            </div>
+            <div class="property-modal-content">
+                <img src="" alt="Property Image" class="property-modal-img" id="modalPropertyImage">
+                <div class="property-modal-price" id="modalPropertyPrice">$450,000</div>
+                <div class="property-modal-details">
+                    <div>
+                        <i class="fas fa-bed"></i>
+                        <span id="modalPropertyBedrooms">3</span> Bedrooms
+                    </div>
+                    <div>
+                        <i class="fas fa-bath"></i>
+                        <span id="modalPropertyBathrooms">2</span> Bathrooms
+                    </div>
+                    <div>
+                        <i class="fas fa-ruler-combined"></i>
+                        <span id="modalPropertySqft">1,800</span> sqft
+                    </div>
+                    <div>
+                        <i class="fas fa-home"></i>
+                        <span id="modalPropertyType">House</span>
+                    </div>
+                </div>
+                <div class="property-modal-description" id="modalPropertyDescription">
+                    This beautiful modern home features an open floor plan, updated kitchen, and spacious backyard perfect for entertaining.
+                </div>
+                <div class="property-modal-address" id="modalPropertyAddress">
+                    <i class="fas fa-map-marker-alt"></i> 123 Main St, Anytown, USA
+                </div>
+                <button class="btn" id="buyNowBtn">Buy Now</button>
+                <button class="btn" id="contactSellerBtn" style="margin-top: 1rem; background-color: var(--accent);">Contact Seller</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>HomeHub</h3>
+                <p>Your trusted partner in finding and selling properties. We connect buyers and sellers for seamless real estate transactions.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#properties">Properties</a></li>
+                    <li><a href="#">Agents</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Real Estate Ave, Suite 100</li>
+                    <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                    <li><i class="fas fa-envelope"></i> info@homehub.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 HomeHub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample property data
+        const properties = [
+            {
+                id: 1,
+                title: "Modern Family Home",
+                address: "123 Main St, Anytown, USA",
+                price: 450000,
+                bedrooms: 3,
+                bathrooms: 2,
+                sqft: 1800,
+                type: "house",
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "This beautiful modern home features an open floor plan, updated kitchen, and spacious backyard perfect for entertaining."
+            },
+            {
+                id: 2,
+                title: "Downtown Apartment",
+                address: "456 Center Ave, Cityville, USA",
+                price: 275000,
+                bedrooms: 2,
+                bathrooms: 1,
+                sqft: 1200,
+                type: "apartment",
+                image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "Stylish downtown apartment with great views, modern appliances, and access to building amenities including pool and gym."
+            },
+            {
+                id: 3,
+                title: "Luxury Waterfront Villa",
+                address: "789 Beach Blvd, Coastaltown, USA",
+                price: 1200000,
+                bedrooms: 4,
+                bathrooms: 3.5,
+                sqft: 3200,
+                type: "house",
+                image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "Stunning waterfront property with private dock, gourmet kitchen, and expansive outdoor living spaces."
+            },
+            {
+                id: 4,
+                title: "Cozy Suburban Townhouse",
+                address: "321 Elm St, Suburbia, USA",
+                price: 325000,
+                bedrooms: 3,
+                bathrooms: 2.5,
+                sqft: 1600,
+                type: "townhouse",
+                image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "Well-maintained townhouse in a quiet neighborhood with community pool and playground."
+            },
+            {
+                id: 5,
+                title: "Rustic Country Cabin",
+                address: "654 Forest Rd, Woodland, USA",
+                price: 195000,
+                bedrooms: 2,
+                bathrooms: 1,
+                sqft: 1100,
+                type: "house",
+                image: "https://images.unsplash.com/photo-1475855581690-80accde3ae2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "Charming cabin on 5 wooded acres with fireplace, covered porch, and access to hiking trails."
+            },
+            {
+                id: 6,
+                title: "Urban Loft Apartment",
+                address: "987 Loft Ave, Metropolis, USA",
+                price: 385000,
+                bedrooms: 1,
+                bathrooms: 1,
+                sqft: 950,
+                type: "apartment",
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                description: "Industrial-chic loft with exposed brick, high ceilings, and prime downtown location."
+            }
+        ];
+
+        // DOM elements
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const addPropertyModal = document.getElementById('addPropertyModal');
+        const propertyModal = document.getElementById('propertyModal');
+        const closeLogin = document.getElementById('closeLogin');
+        const closeRegister = document.getElementById('closeRegister');
+        const closeAddProperty = document.getElementById('closeAddProperty');
+        const closePropertyModal = document.getElementById('closePropertyModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const addPropertyForm = document.getElementById('addPropertyForm');
+        const propertiesContainer = document.getElementById('propertiesContainer');
+        const buyNowBtn = document.getElementById('buyNowBtn');
+        const contactSellerBtn = document.getElementById('contactSellerBtn');
+
+        // Current user state
+        let currentUser = null;
+        let currentPropertyId = null;
+
+        // Modal open/close functions
+        function openModal(modal) {
+            modal.style.display = 'flex';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Event listeners for modals
+        loginBtn.addEventListener('click', () => openModal(loginModal));
+        registerBtn.addEventListener('click', () => openModal(registerModal));
+        closeLogin.addEventListener('click', () => closeModal(loginModal));
+        closeRegister.addEventListener('click', () => closeModal(registerModal));
+        closeAddProperty.addEventListener('click', () => closeModal(addPropertyModal));
+        closePropertyModal.addEventListener('click', () => closeModal(propertyModal));
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) closeModal(loginModal);
+            if (e.target === registerModal) closeModal(registerModal);
+            if (e.target === addPropertyModal) closeModal(addPropertyModal);
+            if (e.target === propertyModal) closeModal(propertyModal);
+        });
+
+        // Form submissions
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation
+            if (email && password) {
+                currentUser = {
+                    email,
+                    type: 'buyer' // Default to buyer for demo
+                };
+                closeModal(loginModal);
+                updateAuthUI();
+                alert('Login successful!');
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const type = document.getElementById('registerType').value;
+            
+            if (name && email && password && type) {
+                currentUser = {
+                    name,
+                    email,
+                    type
+                };
+                closeModal(registerModal);
+                updateAuthUI();
+                alert('Registration successful!');
+            } else {
+                alert('Please fill in all fields');
+            }
+        });
+
+        addPropertyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newProperty = {
+                id: properties.length + 1,
+                title: document.getElementById('propertyTitle').value,
+                address: document.getElementById('propertyAddress').value,
+                price: parseInt(document.getElementById('propertyPrice').value),
+                bedrooms: parseInt(document.getElementById('propertyBedrooms').value),
+                bathrooms: parseFloat(document.getElementById('propertyBathrooms').value),
+                sqft: parseInt(document.getElementById('propertySqft').value),
+                type: document.getElementById('propertyType').value,
+                image: document.getElementById('propertyImage').value,
+                description: document.getElementById('propertyDescription').value
+            };
+            
+            properties.unshift(newProperty);
+            renderProperties();
+            closeModal(addPropertyModal);
+            addPropertyForm.reset();
+            alert('Property listed successfully!');
+        });
+
+        // Update UI based on auth state
+        function updateAuthUI() {
+            const authButtons = document.querySelector('.auth-buttons');
+            
+            if (currentUser) {
+                authButtons.innerHTML = `
+                    <span style="margin-right: 1rem;">Welcome, ${currentUser.name || currentUser.email.split('@')[0]}</span>
+                    ${currentUser.type === 'sell' ? `<button class="btn" id="addPropertyBtn" style="padding: 0.5rem 1rem;">Add Property</button>` : ''}
+                    <button class="login-btn" id="logoutBtn">Logout</button>
+                `;
+                
+                if (currentUser.type === 'sell') {
+                    document.getElementById('addPropertyBtn').addEventListener('click', () => openModal(addPropertyModal));
+                }
+                
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    currentUser = null;
+                    updateAuthUI();
+                });
+            } else {
+                authButtons.innerHTML = `
+                    <button class="login-btn" id="loginBtn">Login</button>
+                    <button class="register-btn" id="registerBtn">Register</button>
+                `;
+                
+                // Reattach event listeners
+                document.getElementById('loginBtn').addEventListener('click', () => openModal(loginModal));
+                document.getElementById('registerBtn').addEventListener('click', () => openModal(registerModal));
+            }
+        }
+
+        // Render properties
+        function renderProperties() {
+            propertiesContainer.innerHTML = '';
+            
+            properties.forEach(property => {
+                const propertyCard = document.createElement('div');
+                propertyCard.className = 'property-card';
+                propertyCard.innerHTML = `
+                    <img src="${property.image}" alt="${property.title}" class="property-img">
+                    <div class="property-info">
+                        <h3>${property.title}</h3>
+                        <div class="location">
+                            <i class="fas fa-map-marker-alt"></i> ${property.address}
+                        </div>
+                        <div class="property-details">
+                            <div class="detail">
+                                <i class="fas fa-bed"></i>
+                                ${property.bedrooms} BR
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-bath"></i>
+                                ${property.bathrooms} BA
+                            </div>
+                            <div class="detail">
+                                <i class="fas fa-ruler-combined"></i>
+                                ${property.sqft.toLocaleString()} sqft
+                            </div>
+                        </div>
+                        <div class="price">$${property.price.toLocaleString()}</div>
+                        <button class="btn view-details" data-id="${property.id}">View Details</button>
+                    </div>
+                `;
+                
+                propertiesContainer.appendChild(propertyCard);
+            });
+            
+            // Add event listeners to view details buttons
+            document.querySelectorAll('.view-details').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const propertyId = parseInt(e.target.getAttribute('data-id'));
+                    showPropertyDetails(propertyId);
+                });
+            });
+        }
+
+        // Show property details in modal
+        function showPropertyDetails(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            
+            if (property) {
+                currentPropertyId = propertyId;
+                document.getElementById('modalPropertyTitle').textContent = property.title;
+                document.getElementById('modalPropertyImage').src = property.image;
+                document.getElementById('modalPropertyPrice').textContent = `$${property.price.toLocaleString()}`;
+                document.getElementById('modalPropertyBedrooms').textContent = property.bedrooms;
+                document.getElementById('modalPropertyBathrooms').textContent = property.bathrooms;
+                document.getElementById('modalPropertySqft').textContent = property.sqft.toLocaleString();
+                document.getElementById('modalPropertyType').textContent = property.type.charAt(0).toUpperCase() + property.type.slice(1);
+                document.getElementById('modalPropertyDescription').textContent = property.description;
+                document.getElementById('modalPropertyAddress').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${property.address}`;
+                
+                openModal(propertyModal);
+            }
+        }
+
+        // Buy now and contact seller buttons
+        buyNowBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                alert('Please login to purchase a property');
+                openModal(loginModal);
+                return;
+            }
+            
+            const property = properties.find(p => p.id === currentPropertyId);
+            alert(`Congratulations! You have purchased ${property.title} for $${property.price.toLocaleString()}. A confirmation has been sent to ${currentUser.email}`);
+            closeModal(propertyModal);
+        });
+
+        contactSellerBtn.addEventListener('click', () => {
+            if (!currentUser) {
+                alert('Please login to contact the seller');
+                openModal(loginModal);
+                return;
+            }
+            
+            alert(`Your contact request has been sent to the seller of this property. They will contact you at ${currentUser.email} shortly.`);
+        });
+
+        // Initialize the page
+        renderProperties();
+        updateAuthUI();
+    </script>
+</body>
+</html>
